@@ -1,0 +1,47 @@
+--READ COMMITTED
+--Фантомы
+--ШАГ 2)
+START TRANSACTION ISOLATION LEVEL READ COMMITTED;
+--ШАГ 3)
+SELECT * FROM staf;
+--ШАГ 6)
+SELECT * FROM staf;
+--ШАГ 7)
+COMMIT;
+
+--REPEATABLE READ
+--Фантомы
+--ШАГ 2)
+START TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+--ШАГ 3)
+SELECT * FROM staf;
+--ШАГ 6)
+SELECT * FROM staf;
+--ШАГ 7)
+COMMIT;
+
+
+--REPEATABLE READ
+--Аномалии сериализации
+--ШАГ 3)
+START TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+--ШАГ 5)
+UPDATE staf SET money = money-10000 WHERE id=1;
+SELECT * FROM staf;
+--ШАГ 7)
+COMMIT;
+SELECT * FROM staf;
+
+
+
+--SERIALIZABLE
+--Аномалии сериализации
+--ШАГ 3)
+START TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+--ШАГ 5)
+UPDATE staf SET money = money-10000 WHERE id=1;
+SELECT * FROM staf;
+--ШАГ 7)
+COMMIT;
+rollback;
+SELECT * FROM staf;
